@@ -19,16 +19,19 @@ namespace VP_ConnectFour
             CurrentPlayer = 1;
         }
 
-        public void DropDisc(int column)
+        public int DropDisc(int column)
         {
             for (int r = Rows - 1; r >= 0; r--)
             {
                 if (board[r, column] == 0)
                 {
                     board[r, column] = CurrentPlayer;
+                    return r;
                 }
             }
+            return -1;
         }
+
 
         public bool CheckWin(int row, int col)
         {
