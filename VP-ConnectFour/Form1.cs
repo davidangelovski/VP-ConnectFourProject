@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,9 @@ namespace VP_ConnectFour
                     cell.BackColor = Color.White;
                     cell.Click += Cell_Click;
                     cell.Tag = col;
+                    GraphicsPath path = new GraphicsPath();
+                    path.AddEllipse(0, 0, cell.Width, cell.Height);
+                    cell.Region = new Region(path);
                     cells[row, col] = cell;
                 }
             }
