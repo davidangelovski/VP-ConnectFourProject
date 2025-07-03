@@ -13,8 +13,10 @@ namespace VP_ConnectFour
 {
     public partial class Form1 : Form
     {
-         Game game = new Game();
-         Panel[,] cells = new Panel[Game.Rows, Game.Columns];
+        Game game = new Game();
+        Panel[,] cells = new Panel[Game.Rows, Game.Columns];
+        bool singlePlayerMode = false;
+        Random rng = new Random();
         public Form1()
         {
             InitializeComponent();
@@ -38,8 +40,11 @@ namespace VP_ConnectFour
             }
 
         }
-        private void Cell_Click(object sender, EventArgs e)
+        private async void Cell_Click(object sender, EventArgs e)
         {
+            if (game.CurrentPlayer == 2 && singlePlayerMode)
+                return; // Block user from playing AI's move
+
             Panel clickedCell = (Panel)sender;
             int col = (int)clickedCell.Tag;
             int row = game.DropDisc(col);
@@ -55,9 +60,41 @@ namespace VP_ConnectFour
                 }
 
                 game.SwitchPlayer();
+
+                if (singlePlayerMode && game.CurrentPlayer == 2)
+                {
+                    await Task.Delay(500);
+                    AIMove();
+                }
             }
-          
         }
+        private void AIMove()
+        {
+            List<int> validCols = new List<int>();
+            for (int col = 0; col < Game.Columns; col++)
+            {
+                if (game.IsColumnAvailable(col))
+                {
+                    validCols.Add(col);
+                }
+            }
+
+            if (validCols.Count > 0)
+            {
+                int aiCol = validCols[rng.Next(validCols.Count)];
+                int row = game.DropDisc(aiCol);              
+                cells[row, aiCol].BackColor = Color.Yellow;
+
+                if (game.CheckWin(row, aiCol))
+                {
+                    MessageBox.Show("AI wins!");
+                    Reset();
+                    return;
+                }
+                game.SwitchPlayer();
+            }
+        }
+        
         private void Reset() {
             for (int row = 0; row < Game.Rows; row++)
             {
@@ -69,7 +106,10 @@ namespace VP_ConnectFour
             game.Reset();
         }
 
-
-
+        private void cbMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            singlePlayerMode = cbMode.SelectedItem.ToString() == "Single-Player";
+            Reset();
+        }
     }
 }
