@@ -31,7 +31,10 @@ namespace VP_ConnectFour
             }
             return -1;
         }
-
+        public bool IsColumnAvailable(int column)
+        {
+            return board[0, column] == 0;
+        }
 
         public bool CheckWin(int row, int col)
         {

@@ -71,6 +71,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbMode = new System.Windows.Forms.ComboBox();
             this.tlpGameGrid.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -478,11 +479,24 @@
             this.panel1.Size = new System.Drawing.Size(54, 53);
             this.panel1.TabIndex = 0;
             // 
+            // cbMode
+            // 
+            this.cbMode.FormattingEnabled = true;
+            this.cbMode.Items.AddRange(new object[] {
+            "Single-Player",
+            "Multi-Player"});
+            this.cbMode.Location = new System.Drawing.Point(637, 155);
+            this.cbMode.Name = "cbMode";
+            this.cbMode.Size = new System.Drawing.Size(121, 21);
+            this.cbMode.TabIndex = 1;
+            this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cbMode);
             this.Controls.Add(this.tlpGameGrid);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -537,6 +551,7 @@
         private System.Windows.Forms.Panel panel18;
         private System.Windows.Forms.Panel panel17;
         private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.ComboBox cbMode;
     }
 }
 
