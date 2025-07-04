@@ -72,6 +72,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbMode = new System.Windows.Forms.ComboBox();
+            this.cbDifficulty = new System.Windows.Forms.ComboBox();
             this.tlpGameGrid.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -491,11 +492,24 @@
             this.cbMode.TabIndex = 1;
             this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
             // 
+            // cbDifficulty
+            // 
+            this.cbDifficulty.FormattingEnabled = true;
+            this.cbDifficulty.Items.AddRange(new object[] {
+            "Beginner",
+            "Intermediate"});
+            this.cbDifficulty.Location = new System.Drawing.Point(637, 196);
+            this.cbDifficulty.Name = "cbDifficulty";
+            this.cbDifficulty.Size = new System.Drawing.Size(121, 21);
+            this.cbDifficulty.TabIndex = 2;
+            this.cbDifficulty.SelectedIndexChanged += new System.EventHandler(this.cbDifficulty_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cbDifficulty);
             this.Controls.Add(this.cbMode);
             this.Controls.Add(this.tlpGameGrid);
             this.Name = "Form1";
@@ -552,6 +566,7 @@
         private System.Windows.Forms.Panel panel17;
         private System.Windows.Forms.Panel panel16;
         private System.Windows.Forms.ComboBox cbMode;
+        private System.Windows.Forms.ComboBox cbDifficulty;
     }
 }
 

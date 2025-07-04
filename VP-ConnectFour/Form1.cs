@@ -17,6 +17,8 @@ namespace VP_ConnectFour
         Panel[,] cells = new Panel[Game.Rows, Game.Columns];
         bool singlePlayerMode = false;
         Random rng = new Random();
+        string difficulty = "Beginner";
+       
         public Form1()
         {
             InitializeComponent();
@@ -43,16 +45,18 @@ namespace VP_ConnectFour
         private async void Cell_Click(object sender, EventArgs e)
         {
             if (game.CurrentPlayer == 2 && singlePlayerMode)
-                return; // Block user from playing AI's move
+                return; 
 
             Panel clickedCell = (Panel)sender;
             int col = (int)clickedCell.Tag;
-            int row = game.DropDisc(col);
+            int row = game.GetBottomRow(col);
+            
             if (row != -1)
             {
+                game.DropDisc(row, col);
                 cells[row, col].BackColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
 
-                if (game.CheckWin(row, col))
+                if (game.CheckWin(row, col, game.CurrentPlayer))
                 {
                     MessageBox.Show($"Player {game.CurrentPlayer} wins!");
                     Reset();
@@ -70,22 +74,24 @@ namespace VP_ConnectFour
         }
         private void AIMove()
         {
-            List<int> validCols = new List<int>();
-            for (int col = 0; col < Game.Columns; col++)
+            int aiCol = -1;
+
+            if (difficulty == "Beginner")
             {
-                if (game.IsColumnAvailable(col))
-                {
-                    validCols.Add(col);
-                }
+                aiCol = BeginnerMove();
             }
 
-            if (validCols.Count > 0)
+            else if (difficulty == "Intermediate") 
             {
-                int aiCol = validCols[rng.Next(validCols.Count)];
-                int row = game.DropDisc(aiCol);              
-                cells[row, aiCol].BackColor = Color.Yellow;
+                aiCol = IntermediateMove();
+            }
+            if (aiCol != -1)
+            {
+                int aiRow = game.GetBottomRow(aiCol);
+                game.DropDisc(aiRow, aiCol);
+                cells[aiRow, aiCol].BackColor = Color.Yellow;
 
-                if (game.CheckWin(row, aiCol))
+                if (game.CheckWin(aiRow, aiCol,game.CurrentPlayer))
                 {
                     MessageBox.Show("AI wins!");
                     Reset();
@@ -94,8 +100,39 @@ namespace VP_ConnectFour
                 game.SwitchPlayer();
             }
         }
+        private int BeginnerMove() 
+        {
+            List<int> validCols = new List<int>();
+            for (int col = 0; col < Game.Columns; col++)
+            {
+                if (game.GetBottomRow(col) != -1)
+                    validCols.Add(col);
+            }
+            return validCols.Count > 0 ? validCols[rng.Next(validCols.Count)] : -1;
+        }
+
+        private int IntermediateMove() {
+
+            
+            for (int col = 0; col < Game.Columns; col++)
+            {
+                int testRow = game.GetBottomRow(col);
+                if (testRow != -1 && game.CheckWin(testRow, col, 2))
+                    return col;
+            }
+
+            for (int col = 0; col < Game.Columns; col++)
+            {
+                int testRow = game.GetBottomRow(col);
+                if (testRow != -1 && game.CheckWin(testRow, col, 1))
+                    return col;
+            }
+
+            return BeginnerMove();
+        }
         
-        private void Reset() {
+        private void Reset()
+        {
             for (int row = 0; row < Game.Rows; row++)
             {
                 for (int col = 0; col < Game.Columns; col++)
@@ -110,6 +147,11 @@ namespace VP_ConnectFour
         {
             singlePlayerMode = cbMode.SelectedItem.ToString() == "Single-Player";
             Reset();
+        }
+
+        private void cbDifficulty_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            difficulty = cbDifficulty.SelectedItem.ToString();
         }
     }
 }

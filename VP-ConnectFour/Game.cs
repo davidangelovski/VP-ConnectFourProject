@@ -19,26 +19,24 @@ namespace VP_ConnectFour
             CurrentPlayer = 1;
         }
 
-        public int DropDisc(int column)
+        public void DropDisc(int row, int column)
+        {
+            board[row, column] = CurrentPlayer;
+        }
+        public int GetBottomRow(int column)
         {
             for (int r = Rows - 1; r >= 0; r--)
             {
                 if (board[r, column] == 0)
                 {
-                    board[r, column] = CurrentPlayer;
                     return r;
                 }
             }
             return -1;
         }
-        public bool IsColumnAvailable(int column)
-        {
-            return board[0, column] == 0;
-        }
 
-        public bool CheckWin(int row, int col)
+        public bool CheckWin(int row, int col , int player)
         {
-            int player = board[row, col];
             return CheckDirection(row, col, -1, 0, player) + CheckDirection(row, col, 1, 0, player) >= 3 ||
                    CheckDirection(row, col, 0, -1, player) + CheckDirection(row, col, 0, 1, player) >= 3 ||
                    CheckDirection(row, col, -1, -1, player) + CheckDirection(row, col, 1, 1, player) >= 3 ||
