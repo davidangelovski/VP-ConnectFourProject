@@ -18,7 +18,7 @@ namespace VP_ConnectFour
         bool singlePlayerMode = false;
         Random rng = new Random();
         string difficulty = "Beginner";
-       
+
         public Form1()
         {
             InitializeComponent();
@@ -40,25 +40,32 @@ namespace VP_ConnectFour
                     cells[row, col] = cell;
                 }
             }
-
         }
+
         private async void Cell_Click(object sender, EventArgs e)
         {
             if (game.CurrentPlayer == 2 && singlePlayerMode)
-                return; 
+                return;
 
             Panel clickedCell = (Panel)sender;
             int col = (int)clickedCell.Tag;
-            int row = game.GetBottomRow(col);
-            
+            int row = game.GetLowermostFreeRow(col);
+
             if (row != -1)
             {
-                game.DropDisc(row, col);
+                game.DropDisc(row, col, game.CurrentPlayer);
                 cells[row, col].BackColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
 
                 if (game.CheckWin(row, col, game.CurrentPlayer))
                 {
                     MessageBox.Show($"Player {game.CurrentPlayer} wins!");
+                    Reset();
+                    return;
+                }
+
+                if (game.IsBoardFull())
+                {
+                    MessageBox.Show("It's a tie!");
                     Reset();
                     return;
                 }
@@ -72,6 +79,7 @@ namespace VP_ConnectFour
                 }
             }
         }
+
         private void AIMove()
         {
             int aiCol = -1;
@@ -80,57 +88,138 @@ namespace VP_ConnectFour
             {
                 aiCol = BeginnerMove();
             }
-
-            else if (difficulty == "Intermediate") 
+            else if (difficulty == "Intermediate")
             {
                 aiCol = IntermediateMove();
             }
+            else if (difficulty == "Advanced")
+            {
+                aiCol = AdvancedMove();
+            }
+
             if (aiCol != -1)
             {
-                int aiRow = game.GetBottomRow(aiCol);
-                game.DropDisc(aiRow, aiCol);
+                int aiRow = game.GetLowermostFreeRow(aiCol);
+                game.DropDisc(aiRow, aiCol, game.CurrentPlayer);
                 cells[aiRow, aiCol].BackColor = Color.Yellow;
 
-                if (game.CheckWin(aiRow, aiCol,game.CurrentPlayer))
+                if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
                 {
                     MessageBox.Show("AI wins!");
                     Reset();
                     return;
                 }
+
+                if (game.IsBoardFull())
+                {
+                    MessageBox.Show("It's a tie!");
+                    Reset();
+                    return;
+                }
+
                 game.SwitchPlayer();
             }
         }
-        private int BeginnerMove() 
+
+        private int BeginnerMove()
         {
             List<int> validCols = new List<int>();
             for (int col = 0; col < Game.Columns; col++)
             {
-                if (game.GetBottomRow(col) != -1)
+                if (game.GetLowermostFreeRow(col) != -1)
                     validCols.Add(col);
             }
             return validCols.Count > 0 ? validCols[rng.Next(validCols.Count)] : -1;
         }
 
-        private int IntermediateMove() {
+        private int IntermediateMove()
+        {
 
-            
             for (int col = 0; col < Game.Columns; col++)
             {
-                int testRow = game.GetBottomRow(col);
+                int testRow = game.GetLowermostFreeRow(col);
                 if (testRow != -1 && game.CheckWin(testRow, col, 2))
                     return col;
             }
 
             for (int col = 0; col < Game.Columns; col++)
             {
-                int testRow = game.GetBottomRow(col);
+                int testRow = game.GetLowermostFreeRow(col);
                 if (testRow != -1 && game.CheckWin(testRow, col, 1))
                     return col;
             }
 
             return BeginnerMove();
         }
-        
+
+        private int AdvancedMove()
+        {
+            int bestScore = int.MinValue;
+            int bestCol = -1;
+
+            for (int col = 0; col < Game.Columns; col++)
+            {
+                int row = game.GetLowermostFreeRow(col);
+                if (row != -1) 
+                {
+                    if (game.CheckWin(row, col, 2))
+                    {
+                        return col;  
+                    }
+                    game.DropDisc(row, col, 2);
+                    bool allowsImmediateHumanWin = false;
+                    for (int humanCheckCol = 0; humanCheckCol < Game.Columns; humanCheckCol++)
+                    {
+                        int humanCheckRow = game.GetLowermostFreeRow(humanCheckCol);
+                        if (humanCheckRow != -1)
+                        {
+                            if (game.CheckWin(humanCheckRow, humanCheckCol, 1))
+                            {
+                                allowsImmediateHumanWin = true;
+                            }
+                            if (allowsImmediateHumanWin) break;  
+                        }
+                    }
+                    int currentMoveScore = game.EvaluateBoard();
+
+                    game.RemoveDisc(row, col);
+                    
+                    if (allowsImmediateHumanWin)
+                    {
+                        currentMoveScore = int.MinValue;
+                    }
+
+                    if (currentMoveScore > bestScore)
+                    {
+                        bestScore = currentMoveScore;
+                        bestCol = col;
+                    }
+                    else if (currentMoveScore == bestScore)
+                    {
+                        int currentColDistanceToCenter = Math.Abs(col - Game.Columns/2);
+                        int bestColDistanceToCenter = Math.Abs(bestCol - Game.Columns/2);
+
+                        if (bestCol == -1 || currentColDistanceToCenter < bestColDistanceToCenter)
+                        {
+                            bestCol = col;
+                        }
+                      
+                    }
+                }
+            }
+
+            if (bestCol == -1 || bestScore == int.MinValue)
+            {
+                return BeginnerMove();
+            }
+
+            return bestCol;
+        }
+
+
+
+
+
         private void Reset()
         {
             for (int row = 0; row < Game.Rows; row++)

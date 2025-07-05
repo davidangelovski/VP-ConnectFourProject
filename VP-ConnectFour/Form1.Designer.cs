@@ -497,7 +497,8 @@
             this.cbDifficulty.FormattingEnabled = true;
             this.cbDifficulty.Items.AddRange(new object[] {
             "Beginner",
-            "Intermediate"});
+            "Intermediate",
+            "Advanced"});
             this.cbDifficulty.Location = new System.Drawing.Point(637, 196);
             this.cbDifficulty.Name = "cbDifficulty";
             this.cbDifficulty.Size = new System.Drawing.Size(121, 21);
