@@ -517,10 +517,12 @@
             // rbMulti
             // 
             this.rbMulti.AutoSize = true;
+            this.rbMulti.Checked = true;
             this.rbMulti.Location = new System.Drawing.Point(9, 42);
             this.rbMulti.Name = "rbMulti";
             this.rbMulti.Size = new System.Drawing.Size(79, 17);
             this.rbMulti.TabIndex = 6;
+            this.rbMulti.TabStop = true;
             this.rbMulti.Text = "Multi-Player";
             this.rbMulti.UseVisualStyleBackColor = true;
             this.rbMulti.Click += new System.EventHandler(this.rbMulti_Click);
@@ -528,10 +530,12 @@
             // rbBeginner
             // 
             this.rbBeginner.AutoSize = true;
+            this.rbBeginner.Checked = true;
             this.rbBeginner.Location = new System.Drawing.Point(9, 19);
             this.rbBeginner.Name = "rbBeginner";
             this.rbBeginner.Size = new System.Drawing.Size(67, 17);
             this.rbBeginner.TabIndex = 8;
+            this.rbBeginner.TabStop = true;
             this.rbBeginner.Text = "Beginner";
             this.rbBeginner.UseVisualStyleBackColor = true;
             this.rbBeginner.Click += new System.EventHandler(this.rbBeginner_Click);
@@ -563,12 +567,11 @@
             this.groupBox1.BackColor = System.Drawing.Color.Black;
             this.groupBox1.Controls.Add(this.lbTurn);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox1.Location = new System.Drawing.Point(12, 102);
+            this.groupBox1.Location = new System.Drawing.Point(2, 102);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(172, 79);
+            this.groupBox1.Size = new System.Drawing.Size(185, 79);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Turn";
             // 
             // lbTurn
             // 
@@ -576,7 +579,7 @@
             this.lbTurn.BackColor = System.Drawing.Color.Transparent;
             this.lbTurn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbTurn.ForeColor = System.Drawing.Color.White;
-            this.lbTurn.Location = new System.Drawing.Point(6, 23);
+            this.lbTurn.Location = new System.Drawing.Point(6, 28);
             this.lbTurn.Name = "lbTurn";
             this.lbTurn.Size = new System.Drawing.Size(162, 13);
             this.lbTurn.TabIndex = 3;

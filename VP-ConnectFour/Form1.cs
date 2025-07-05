@@ -49,7 +49,7 @@ namespace VP_ConnectFour
             {
                 cells[r, col].BackColor = discColor;
 
-                if (r > 0 && r <= row)
+                if (r > 0)
                 {
                     cells[r - 1, col].BackColor = Color.White;
                 }
@@ -73,15 +73,15 @@ namespace VP_ConnectFour
             await AnimateDiscFall(row, col, discColor);
             if (game.CheckWin(row, col, game.CurrentPlayer))
             {
-                MessageBox.Show($"Player {game.CurrentPlayer} wins! Well played!");
-                Reset();
+                lbTurn.Text = $"Player {game.CurrentPlayer} wins! Well played!\nReset the board to play again!";
+                inputEnabled = false;
                 return;
             }
 
             if (game.IsBoardFull())
             {
-                MessageBox.Show("It's a tie!");
-                Reset();
+                lbTurn.Text = "It's a tie!\nReset the board to play again";
+                inputEnabled = false;
                 return;
             }
 
@@ -124,15 +124,15 @@ namespace VP_ConnectFour
                 await AnimateDiscFall(aiRow, aiCol, discColor);
                 if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
                 {
-                    MessageBox.Show("AI wins! Better luck next time");
-                    Reset();
+                    lbTurn.Text ="AI wins! Better luck next time.\nReset the board to play again!";
+                    inputEnabled = false;
                     return;
                 }
 
                 if (game.IsBoardFull())
                 {
-                    MessageBox.Show("It's a tie!");
-                    Reset();
+                    lbTurn.Text = "It's a tie!\nReset the board to play again";
+                    inputEnabled = false;
                     return;
                 }
 
@@ -275,8 +275,6 @@ namespace VP_ConnectFour
         {
             Reset();
         }
-
-       
 
         private void rbBeginner_Click(object sender, EventArgs e)
         {
