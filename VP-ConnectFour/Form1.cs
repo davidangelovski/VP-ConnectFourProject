@@ -18,6 +18,7 @@ namespace VP_ConnectFour
         bool singlePlayerMode = false;
         Random rng = new Random();
         string difficulty = "Beginner";
+        bool inputEnabled = true;
 
         public Form1()
         {
@@ -48,7 +49,7 @@ namespace VP_ConnectFour
             {
                 cells[r, col].BackColor = discColor;
 
-                if (r > 0 && r <= row)
+                if (r > 0)
                 {
                     cells[r - 1, col].BackColor = Color.White;
                 }
@@ -59,9 +60,11 @@ namespace VP_ConnectFour
 
         private async void HandleMove(int col)
         {
-            if (game.CurrentPlayer == 2 && singlePlayerMode)
+            if (!inputEnabled)
+            {
                 return;
-
+            }
+            inputEnabled = false;
             int row = game.GetLowermostFreeRow(col);
             if (row == -1) return;
 
@@ -70,15 +73,15 @@ namespace VP_ConnectFour
             await AnimateDiscFall(row, col, discColor);
             if (game.CheckWin(row, col, game.CurrentPlayer))
             {
-                MessageBox.Show($"Player {game.CurrentPlayer} wins! Well played!");
-                Reset();
+                lbTurn.Text = $"Player {game.CurrentPlayer} wins! Well played!\nReset the board to play again!";
+                inputEnabled = false;
                 return;
             }
 
             if (game.IsBoardFull())
             {
-                MessageBox.Show("It's a tie!");
-                Reset();
+                lbTurn.Text = "It's a tie!\nReset the board to play again";
+                inputEnabled = false;
                 return;
             }
 
@@ -88,6 +91,10 @@ namespace VP_ConnectFour
             {
                 await Task.Delay(500);
                 AIMove();
+            }
+            else 
+            {
+                inputEnabled = true;
             }
         }
 
@@ -117,20 +124,21 @@ namespace VP_ConnectFour
                 await AnimateDiscFall(aiRow, aiCol, discColor);
                 if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
                 {
-                    MessageBox.Show("AI wins! Better luck next time");
-                    Reset();
+                    lbTurn.Text ="AI wins! Better luck next time.\nReset the board to play again!";
+                    inputEnabled = false;
                     return;
                 }
 
                 if (game.IsBoardFull())
                 {
-                    MessageBox.Show("It's a tie!");
-                    Reset();
+                    lbTurn.Text = "It's a tie!\nReset the board to play again";
+                    inputEnabled = false;
                     return;
                 }
 
                 game.SwitchPlayer();
                 switchTurnText();
+                inputEnabled = true;
             }
         }
 
@@ -207,17 +215,7 @@ namespace VP_ConnectFour
                         bestScore = currentMoveScore;
                         bestCol = col;
                     }
-                    else if (currentMoveScore == bestScore)
-                    {
-                        int currentColDistanceToCenter = Math.Abs(col - Game.Columns/2);
-                        int bestColDistanceToCenter = Math.Abs(bestCol - Game.Columns/2);
-
-                        if (bestCol == -1 || currentColDistanceToCenter < bestColDistanceToCenter)
-                        {
-                            bestCol = col;
-                        }
-                      
-                    }
+                   
                 }
             }
 
@@ -242,6 +240,7 @@ namespace VP_ConnectFour
                     cells[row, col].BackColor = Color.White;
                 }
             }
+            inputEnabled = true;
             lbTurn.Text = $"Click on the board to begin";
             lbTurn.ForeColor = Color.White;
             game.Reset();
@@ -277,30 +276,6 @@ namespace VP_ConnectFour
             Reset();
         }
 
-        
-
-        private void rbSingle_MouseClick(object sender, MouseEventArgs e)
-        {
-            singlePlayerMode = true;
-            lbDifficulty.Visible = true;
-            rbBeginner.Visible = true;
-            rbBeginner.Checked = true;
-            rbIntermediate.Visible = true;
-            rbAdvanced.Visible = true;
-            Reset();
-
-        }
-
-        private void rbMulti_MouseClick(object sender, MouseEventArgs e)
-        {
-            singlePlayerMode = false;
-            lbDifficulty.Visible = false;
-            rbBeginner.Visible = false;
-            rbIntermediate.Visible = false;
-            rbAdvanced.Visible = false;
-            Reset();
-        }
-
         private void rbBeginner_Click(object sender, EventArgs e)
         {
             difficulty = "Beginner";
@@ -315,6 +290,24 @@ namespace VP_ConnectFour
         private void rbAdvanced_Click(object sender, EventArgs e)
         {
             difficulty = "Advanced";
+        }
+
+        private void rbSingle_Click(object sender, EventArgs e)
+        {
+            rbSingle.Checked = true;
+            rbMulti.Checked = false;
+            singlePlayerMode = true;
+            gbDifficulty.Visible = true;
+            Reset();
+        }
+
+        private void rbMulti_Click(object sender, EventArgs e)
+        {
+            rbMulti.Checked = true;
+            rbSingle.Checked = false;
+            singlePlayerMode = false;
+            gbDifficulty.Visible = false;
+            Reset();
         }
     }
 }
