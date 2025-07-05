@@ -32,7 +32,7 @@ namespace VP_ConnectFour
                 {
                     Panel cell = (Panel)tlpGameGrid.GetControlFromPosition(col, row);
                     cell.BackColor = Color.White;
-                    cell.Click += Cell_Click;
+                    cell.Click += Panel_Click;
                     cell.Tag = col;
                     GraphicsPath path = new GraphicsPath();
                     path.AddEllipse(0, 0, cell.Width, cell.Height);
@@ -42,45 +42,57 @@ namespace VP_ConnectFour
             }
         }
 
-        private async void Cell_Click(object sender, EventArgs e)
+        private async Task AnimateDiscFall(int row, int col, Color discColor)
+        {
+            for (int r = 0; r <= row; r++)
+            {
+                cells[r, col].BackColor = discColor;
+
+                if (r > 0 && r <= row)
+                {
+                    cells[r - 1, col].BackColor = Color.White;
+                }
+
+                await Task.Delay(50);
+            }
+        }
+
+        private async void HandleMove(int col)
         {
             if (game.CurrentPlayer == 2 && singlePlayerMode)
                 return;
 
-            Panel clickedCell = (Panel)sender;
-            int col = (int)clickedCell.Tag;
             int row = game.GetLowermostFreeRow(col);
+            if (row == -1) return;
 
-            if (row != -1)
+            game.DropDisc(row, col, game.CurrentPlayer);
+            Color discColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
+            await AnimateDiscFall(row, col, discColor);
+            if (game.CheckWin(row, col, game.CurrentPlayer))
             {
-                game.DropDisc(row, col, game.CurrentPlayer);
-                cells[row, col].BackColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
+                MessageBox.Show($"Player {game.CurrentPlayer} wins! Well played!");
+                Reset();
+                return;
+            }
 
-                if (game.CheckWin(row, col, game.CurrentPlayer))
-                {
-                    MessageBox.Show($"Player {game.CurrentPlayer} wins!");
-                    Reset();
-                    return;
-                }
+            if (game.IsBoardFull())
+            {
+                MessageBox.Show("It's a tie!");
+                Reset();
+                return;
+            }
 
-                if (game.IsBoardFull())
-                {
-                    MessageBox.Show("It's a tie!");
-                    Reset();
-                    return;
-                }
-
-                game.SwitchPlayer();
-
-                if (singlePlayerMode && game.CurrentPlayer == 2)
-                {
-                    await Task.Delay(500);
-                    AIMove();
-                }
+            game.SwitchPlayer();
+            switchTurnText();
+            if (singlePlayerMode && game.CurrentPlayer == 2)
+            {
+                await Task.Delay(500);
+                AIMove();
             }
         }
 
-        private void AIMove()
+
+        private async void AIMove()
         {
             int aiCol = -1;
 
@@ -101,11 +113,11 @@ namespace VP_ConnectFour
             {
                 int aiRow = game.GetLowermostFreeRow(aiCol);
                 game.DropDisc(aiRow, aiCol, game.CurrentPlayer);
-                cells[aiRow, aiCol].BackColor = Color.Yellow;
-
+                Color discColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
+                await AnimateDiscFall(aiRow, aiCol, discColor);
                 if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
                 {
-                    MessageBox.Show("AI wins!");
+                    MessageBox.Show("AI wins! Better luck next time");
                     Reset();
                     return;
                 }
@@ -118,6 +130,7 @@ namespace VP_ConnectFour
                 }
 
                 game.SwitchPlayer();
+                switchTurnText();
             }
         }
 
@@ -229,18 +242,79 @@ namespace VP_ConnectFour
                     cells[row, col].BackColor = Color.White;
                 }
             }
+            lbTurn.Text = $"Click on the board to begin";
+            lbTurn.ForeColor = Color.White;
             game.Reset();
         }
 
-        private void cbMode_SelectedIndexChanged(object sender, EventArgs e)
+       
+
+        private void switchTurnText()
         {
-            singlePlayerMode = cbMode.SelectedItem.ToString() == "Single-Player";
+            lbTurn.Text = $"Player {game.CurrentPlayer}'s Turn";
+            lbTurn.ForeColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
+        }
+
+        private void tlpGameGrid_MouseClick(object sender, MouseEventArgs e)
+        {
+            int colWidth = tlpGameGrid.Width / Game.Columns;
+            int clickedCol = e.X / colWidth;
+
+            if (clickedCol < 0 || clickedCol >= Game.Columns)
+                return;
+
+            HandleMove(clickedCol);
+        }
+        private void Panel_Click(object sender, EventArgs e)
+        {
+            Panel clickedCell = (Panel)sender;
+            int col = (int)clickedCell.Tag;
+            HandleMove(col);
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
             Reset();
         }
 
-        private void cbDifficulty_SelectedIndexChanged(object sender, EventArgs e)
+        
+
+        private void rbSingle_MouseClick(object sender, MouseEventArgs e)
         {
-            difficulty = cbDifficulty.SelectedItem.ToString();
+            singlePlayerMode = true;
+            lbDifficulty.Visible = true;
+            rbBeginner.Visible = true;
+            rbBeginner.Checked = true;
+            rbIntermediate.Visible = true;
+            rbAdvanced.Visible = true;
+            Reset();
+
+        }
+
+        private void rbMulti_MouseClick(object sender, MouseEventArgs e)
+        {
+            singlePlayerMode = false;
+            lbDifficulty.Visible = false;
+            rbBeginner.Visible = false;
+            rbIntermediate.Visible = false;
+            rbAdvanced.Visible = false;
+            Reset();
+        }
+
+        private void rbBeginner_Click(object sender, EventArgs e)
+        {
+            difficulty = "Beginner";
+        }
+
+        private void rbIntermediate_Click(object sender, EventArgs e)
+        {
+            difficulty = "Intermediate";
+
+        }
+
+        private void rbAdvanced_Click(object sender, EventArgs e)
+        {
+            difficulty = "Advanced";
         }
     }
 }

@@ -71,9 +71,18 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cbMode = new System.Windows.Forms.ComboBox();
-            this.cbDifficulty = new System.Windows.Forms.ComboBox();
+            this.btnReset = new System.Windows.Forms.Button();
+            this.rbSingle = new System.Windows.Forms.RadioButton();
+            this.rbMulti = new System.Windows.Forms.RadioButton();
+            this.lbMode = new System.Windows.Forms.Label();
+            this.rbBeginner = new System.Windows.Forms.RadioButton();
+            this.rbIntermediate = new System.Windows.Forms.RadioButton();
+            this.rbAdvanced = new System.Windows.Forms.RadioButton();
+            this.lbDifficulty = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbTurn = new System.Windows.Forms.Label();
             this.tlpGameGrid.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tlpGameGrid
@@ -141,8 +150,10 @@
             this.tlpGameGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tlpGameGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
             this.tlpGameGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+            this.tlpGameGrid.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpGameGrid.Size = new System.Drawing.Size(420, 360);
             this.tlpGameGrid.TabIndex = 0;
+            this.tlpGameGrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tlpGameGrid_MouseClick);
             // 
             // panel42
             // 
@@ -480,44 +491,141 @@
             this.panel1.Size = new System.Drawing.Size(54, 53);
             this.panel1.TabIndex = 0;
             // 
-            // cbMode
+            // btnReset
             // 
-            this.cbMode.FormattingEnabled = true;
-            this.cbMode.Items.AddRange(new object[] {
-            "Single-Player",
-            "Multi-Player"});
-            this.cbMode.Location = new System.Drawing.Point(637, 155);
-            this.cbMode.Name = "cbMode";
-            this.cbMode.Size = new System.Drawing.Size(121, 21);
-            this.cbMode.TabIndex = 1;
-            this.cbMode.SelectedIndexChanged += new System.EventHandler(this.cbMode_SelectedIndexChanged);
+            this.btnReset.Location = new System.Drawing.Point(640, 366);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(121, 25);
+            this.btnReset.TabIndex = 4;
+            this.btnReset.Text = "Reset Board";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // cbDifficulty
+            // rbSingle
             // 
-            this.cbDifficulty.FormattingEnabled = true;
-            this.cbDifficulty.Items.AddRange(new object[] {
-            "Beginner",
-            "Intermediate",
-            "Advanced"});
-            this.cbDifficulty.Location = new System.Drawing.Point(637, 196);
-            this.cbDifficulty.Name = "cbDifficulty";
-            this.cbDifficulty.Size = new System.Drawing.Size(121, 21);
-            this.cbDifficulty.TabIndex = 2;
-            this.cbDifficulty.SelectedIndexChanged += new System.EventHandler(this.cbDifficulty_SelectedIndexChanged);
+            this.rbSingle.AutoSize = true;
+            this.rbSingle.Location = new System.Drawing.Point(654, 132);
+            this.rbSingle.Name = "rbSingle";
+            this.rbSingle.Size = new System.Drawing.Size(86, 17);
+            this.rbSingle.TabIndex = 5;
+            this.rbSingle.Text = "Single-Player";
+            this.rbSingle.UseVisualStyleBackColor = true;
+            this.rbSingle.MouseClick += new System.Windows.Forms.MouseEventHandler(this.rbSingle_MouseClick);
+            // 
+            // rbMulti
+            // 
+            this.rbMulti.AutoSize = true;
+            this.rbMulti.Location = new System.Drawing.Point(654, 153);
+            this.rbMulti.Name = "rbMulti";
+            this.rbMulti.Size = new System.Drawing.Size(79, 17);
+            this.rbMulti.TabIndex = 6;
+            this.rbMulti.Text = "Multi-Player";
+            this.rbMulti.UseVisualStyleBackColor = true;
+            this.rbMulti.MouseClick += new System.Windows.Forms.MouseEventHandler(this.rbMulti_MouseClick);
+            // 
+            // lbMode
+            // 
+            this.lbMode.AutoSize = true;
+            this.lbMode.Location = new System.Drawing.Point(651, 116);
+            this.lbMode.Name = "lbMode";
+            this.lbMode.Size = new System.Drawing.Size(70, 13);
+            this.lbMode.TabIndex = 7;
+            this.lbMode.Text = "Select Mode:";
+            // 
+            // rbBeginner
+            // 
+            this.rbBeginner.AutoSize = true;
+            this.rbBeginner.Location = new System.Drawing.Point(654, 214);
+            this.rbBeginner.Name = "rbBeginner";
+            this.rbBeginner.Size = new System.Drawing.Size(67, 17);
+            this.rbBeginner.TabIndex = 8;
+            this.rbBeginner.Text = "Beginner";
+            this.rbBeginner.UseVisualStyleBackColor = true;
+            this.rbBeginner.Visible = false;
+            this.rbBeginner.Click += new System.EventHandler(this.rbBeginner_Click);
+            // 
+            // rbIntermediate
+            // 
+            this.rbIntermediate.AutoSize = true;
+            this.rbIntermediate.Location = new System.Drawing.Point(654, 237);
+            this.rbIntermediate.Name = "rbIntermediate";
+            this.rbIntermediate.Size = new System.Drawing.Size(83, 17);
+            this.rbIntermediate.TabIndex = 9;
+            this.rbIntermediate.Text = "Intermediate";
+            this.rbIntermediate.UseVisualStyleBackColor = true;
+            this.rbIntermediate.Visible = false;
+            this.rbIntermediate.Click += new System.EventHandler(this.rbIntermediate_Click);
+            // 
+            // rbAdvanced
+            // 
+            this.rbAdvanced.AutoSize = true;
+            this.rbAdvanced.Location = new System.Drawing.Point(654, 260);
+            this.rbAdvanced.Name = "rbAdvanced";
+            this.rbAdvanced.Size = new System.Drawing.Size(74, 17);
+            this.rbAdvanced.TabIndex = 10;
+            this.rbAdvanced.Text = "Advanced";
+            this.rbAdvanced.UseVisualStyleBackColor = true;
+            this.rbAdvanced.Visible = false;
+            this.rbAdvanced.Click += new System.EventHandler(this.rbAdvanced_Click);
+            // 
+            // lbDifficulty
+            // 
+            this.lbDifficulty.AutoSize = true;
+            this.lbDifficulty.Location = new System.Drawing.Point(651, 198);
+            this.lbDifficulty.Name = "lbDifficulty";
+            this.lbDifficulty.Size = new System.Drawing.Size(96, 13);
+            this.lbDifficulty.TabIndex = 11;
+            this.lbDifficulty.Text = "Select AI Difficulty:";
+            this.lbDifficulty.Visible = false;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.Color.Black;
+            this.groupBox1.Controls.Add(this.lbTurn);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox1.Location = new System.Drawing.Point(12, 132);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(172, 79);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Turn";
+            // 
+            // lbTurn
+            // 
+            this.lbTurn.AutoSize = true;
+            this.lbTurn.BackColor = System.Drawing.Color.Transparent;
+            this.lbTurn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTurn.ForeColor = System.Drawing.Color.White;
+            this.lbTurn.Location = new System.Drawing.Point(6, 23);
+            this.lbTurn.Name = "lbTurn";
+            this.lbTurn.Size = new System.Drawing.Size(162, 13);
+            this.lbTurn.TabIndex = 3;
+            this.lbTurn.Text = "Click on the Board to begin\r\n";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.cbDifficulty);
-            this.Controls.Add(this.cbMode);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.lbDifficulty);
+            this.Controls.Add(this.rbAdvanced);
+            this.Controls.Add(this.rbIntermediate);
+            this.Controls.Add(this.rbBeginner);
+            this.Controls.Add(this.lbMode);
+            this.Controls.Add(this.rbMulti);
+            this.Controls.Add(this.rbSingle);
+            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.tlpGameGrid);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tlpGameGrid.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -566,8 +674,16 @@
         private System.Windows.Forms.Panel panel18;
         private System.Windows.Forms.Panel panel17;
         private System.Windows.Forms.Panel panel16;
-        private System.Windows.Forms.ComboBox cbMode;
-        private System.Windows.Forms.ComboBox cbDifficulty;
+        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.RadioButton rbSingle;
+        private System.Windows.Forms.RadioButton rbMulti;
+        private System.Windows.Forms.Label lbMode;
+        private System.Windows.Forms.RadioButton rbBeginner;
+        private System.Windows.Forms.RadioButton rbIntermediate;
+        private System.Windows.Forms.RadioButton rbAdvanced;
+        private System.Windows.Forms.Label lbDifficulty;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lbTurn;
     }
 }
 
