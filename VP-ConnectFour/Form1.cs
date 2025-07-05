@@ -18,6 +18,7 @@ namespace VP_ConnectFour
         bool singlePlayerMode = false;
         Random rng = new Random();
         string difficulty = "Beginner";
+        bool inputEnabled = true;
 
         public Form1()
         {
@@ -59,9 +60,11 @@ namespace VP_ConnectFour
 
         private async void HandleMove(int col)
         {
-            if (game.CurrentPlayer == 2 && singlePlayerMode)
+            if (!inputEnabled)
+            {
                 return;
-
+            }
+            inputEnabled = false;
             int row = game.GetLowermostFreeRow(col);
             if (row == -1) return;
 
@@ -88,6 +91,10 @@ namespace VP_ConnectFour
             {
                 await Task.Delay(500);
                 AIMove();
+            }
+            else 
+            {
+                inputEnabled = true;
             }
         }
 
@@ -131,6 +138,7 @@ namespace VP_ConnectFour
 
                 game.SwitchPlayer();
                 switchTurnText();
+                inputEnabled = true;
             }
         }
 
@@ -232,6 +240,7 @@ namespace VP_ConnectFour
                     cells[row, col].BackColor = Color.White;
                 }
             }
+            inputEnabled = true;
             lbTurn.Text = $"Click on the board to begin";
             lbTurn.ForeColor = Color.White;
             game.Reset();
@@ -266,10 +275,6 @@ namespace VP_ConnectFour
         {
             Reset();
         }
-
-        
-
-       
 
        
 
