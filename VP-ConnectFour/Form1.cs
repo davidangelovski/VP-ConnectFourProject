@@ -207,17 +207,7 @@ namespace VP_ConnectFour
                         bestScore = currentMoveScore;
                         bestCol = col;
                     }
-                    else if (currentMoveScore == bestScore)
-                    {
-                        int currentColDistanceToCenter = Math.Abs(col - Game.Columns/2);
-                        int bestColDistanceToCenter = Math.Abs(bestCol - Game.Columns/2);
-
-                        if (bestCol == -1 || currentColDistanceToCenter < bestColDistanceToCenter)
-                        {
-                            bestCol = col;
-                        }
-                      
-                    }
+                   
                 }
             }
 
@@ -279,27 +269,9 @@ namespace VP_ConnectFour
 
         
 
-        private void rbSingle_MouseClick(object sender, MouseEventArgs e)
-        {
-            singlePlayerMode = true;
-            lbDifficulty.Visible = true;
-            rbBeginner.Visible = true;
-            rbBeginner.Checked = true;
-            rbIntermediate.Visible = true;
-            rbAdvanced.Visible = true;
-            Reset();
+       
 
-        }
-
-        private void rbMulti_MouseClick(object sender, MouseEventArgs e)
-        {
-            singlePlayerMode = false;
-            lbDifficulty.Visible = false;
-            rbBeginner.Visible = false;
-            rbIntermediate.Visible = false;
-            rbAdvanced.Visible = false;
-            Reset();
-        }
+       
 
         private void rbBeginner_Click(object sender, EventArgs e)
         {
@@ -315,6 +287,24 @@ namespace VP_ConnectFour
         private void rbAdvanced_Click(object sender, EventArgs e)
         {
             difficulty = "Advanced";
+        }
+
+        private void rbSingle_Click(object sender, EventArgs e)
+        {
+            rbSingle.Checked = true;
+            rbMulti.Checked = false;
+            singlePlayerMode = true;
+            gbDifficulty.Visible = true;
+            Reset();
+        }
+
+        private void rbMulti_Click(object sender, EventArgs e)
+        {
+            rbMulti.Checked = true;
+            rbSingle.Checked = false;
+            singlePlayerMode = false;
+            gbDifficulty.Visible = false;
+            Reset();
         }
     }
 }
