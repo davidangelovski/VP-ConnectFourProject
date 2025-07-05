@@ -186,13 +186,24 @@ namespace VP_ConnectFour
                     
                     if (allowsImmediateHumanWin)
                     {
-                        currentMoveScore = int.MinValue + 1;
+                        currentMoveScore = int.MinValue;
                     }
 
                     if (currentMoveScore > bestScore)
                     {
                         bestScore = currentMoveScore;
                         bestCol = col;
+                    }
+                    else if (currentMoveScore == bestScore)
+                    {
+                        int currentColDistanceToCenter = Math.Abs(col - Game.Columns/2);
+                        int bestColDistanceToCenter = Math.Abs(bestCol - Game.Columns/2);
+
+                        if (bestCol == -1 || currentColDistanceToCenter < bestColDistanceToCenter)
+                        {
+                            bestCol = col;
+                        }
+                      
                     }
                 }
             }

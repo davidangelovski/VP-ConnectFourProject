@@ -70,8 +70,12 @@ namespace VP_ConnectFour
                     int[] segment = new int[4];
                     for (int i = 0; i <= 3; i++)
                     {
-                        segment[i] =board[r, c + i];
+                        if (board[r,c+i] != 0 || r == GetLowermostFreeRow(c + i))
+                        {
+                            segment[i] = board[r, c + i];
+                        }
                     }
+                    
                     score += ScoreSegment(segment);
                 }
             }
@@ -83,7 +87,10 @@ namespace VP_ConnectFour
                     int[] segment = new int[4];
                     for (int i = 0; i <= 3; i++)
                     {
-                        segment[i] = board[r + i, c];
+                        if (board[r + i, c] != 0 || r + i == GetLowermostFreeRow(c))
+                        {
+                            segment[i] = board[r + i, c];
+                        }
                     }
                     score += ScoreSegment(segment);
                 }
@@ -96,7 +103,10 @@ namespace VP_ConnectFour
                     int[] segment = new int[4];
                     for (int i = 0; i <= 3; i++)
                     {
-                        segment[i] = board[r + i, c + i];
+                        if (board[r + i, c + i] != 0 || r + i == GetLowermostFreeRow(c + i))
+                        {
+                            segment[i] = board[r + i, c + i];
+                        }
                     }
                     score += ScoreSegment(segment);
                 }
@@ -109,7 +119,10 @@ namespace VP_ConnectFour
                     int[] segment = new int[4];
                     for (int i = 0; i <= 3; i++)
                     {
-                        segment[i] = board[r + i, c - i];
+                        if (board[r + i, c - i] != 0 || r + i == GetLowermostFreeRow(c - i))
+                        {
+                            segment[i] = board[r + i, c - i];
+                        }
                     }
                     score += ScoreSegment(segment);
                 }
