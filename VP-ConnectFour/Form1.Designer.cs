@@ -85,6 +85,7 @@
             this.gbMode = new System.Windows.Forms.GroupBox();
             this.gbDifficulty = new System.Windows.Forms.GroupBox();
             this.btResetScores = new System.Windows.Forms.Button();
+            this.rbExtreme = new System.Windows.Forms.RadioButton();
             this.tlpGameGrid.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gbMode.SuspendLayout();
@@ -641,12 +642,13 @@
             // 
             // gbDifficulty
             // 
+            this.gbDifficulty.Controls.Add(this.rbExtreme);
             this.gbDifficulty.Controls.Add(this.rbBeginner);
             this.gbDifficulty.Controls.Add(this.rbIntermediate);
             this.gbDifficulty.Controls.Add(this.rbAdvanced);
             this.gbDifficulty.Location = new System.Drawing.Point(640, 214);
             this.gbDifficulty.Name = "gbDifficulty";
-            this.gbDifficulty.Size = new System.Drawing.Size(135, 93);
+            this.gbDifficulty.Size = new System.Drawing.Size(135, 112);
             this.gbDifficulty.TabIndex = 14;
             this.gbDifficulty.TabStop = false;
             this.gbDifficulty.Text = "Select AI Difficulty:";
@@ -661,6 +663,17 @@
             this.btResetScores.Text = "Reset Scores";
             this.btResetScores.UseVisualStyleBackColor = true;
             this.btResetScores.Click += new System.EventHandler(this.btResetScores_Click);
+            // 
+            // rbExtreme
+            // 
+            this.rbExtreme.AutoSize = true;
+            this.rbExtreme.Location = new System.Drawing.Point(9, 88);
+            this.rbExtreme.Name = "rbExtreme";
+            this.rbExtreme.Size = new System.Drawing.Size(63, 17);
+            this.rbExtreme.TabIndex = 16;
+            this.rbExtreme.Text = "Extreme";
+            this.rbExtreme.UseVisualStyleBackColor = true;
+            this.rbExtreme.Click += new System.EventHandler(this.rbExtreme_Click);
             // 
             // Form1
             // 
@@ -749,6 +762,7 @@
         private System.Windows.Forms.Label lbP1Score;
         private System.Windows.Forms.Label lbP2Score;
         private System.Windows.Forms.Button btResetScores;
+        private System.Windows.Forms.RadioButton rbExtreme;
     }
 }
 
