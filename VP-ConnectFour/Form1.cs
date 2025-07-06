@@ -19,6 +19,8 @@ namespace VP_ConnectFour
         Random rng = new Random();
         string difficulty = "Beginner";
         bool inputEnabled = true;
+        int p1Score = 0;
+        int p2Score = 0;
 
         public Form1()
         {
@@ -73,6 +75,15 @@ namespace VP_ConnectFour
             await AnimateDiscFall(row, col, discColor);
             if (game.CheckWin(row, col, game.CurrentPlayer))
             {
+                if (game.CurrentPlayer == 1)
+                {
+                    p1Score++;
+                }
+                else 
+                {
+                    p2Score++;
+                }
+                UpdateScoreLabels();
                 lbTurn.Text = $"Player {game.CurrentPlayer} wins! Well played!\nReset the board to play again!";
                 inputEnabled = false;
                 return;
@@ -124,6 +135,8 @@ namespace VP_ConnectFour
                 await AnimateDiscFall(aiRow, aiCol, discColor);
                 if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
                 {
+                    p2Score++;
+                    UpdateScoreLabels();
                     lbTurn.Text ="AI wins! Better luck next time.\nReset the board to play again!";
                     inputEnabled = false;
                     return;
@@ -250,10 +263,28 @@ namespace VP_ConnectFour
 
         private void switchTurnText()
         {
-            lbTurn.Text = $"Player {game.CurrentPlayer}'s Turn";
+            if (singlePlayerMode && game.CurrentPlayer == 2)
+            {
+                lbTurn.Text = "AI's Turn";
+            }
+            else 
+            {
+                lbTurn.Text = $"Player {game.CurrentPlayer}'s Turn";
+            }
             lbTurn.ForeColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
         }
-
+        private void UpdateScoreLabels() 
+        {
+            lbP1Score.Text = $"Player 1: {p1Score}";
+            if (singlePlayerMode)
+            {
+                lbP2Score.Text = $"AI: {p2Score}";
+            }
+            else
+            {
+                lbP2Score.Text = $"Player 2: {p2Score}";
+            }
+        }
         private void tlpGameGrid_MouseClick(object sender, MouseEventArgs e)
         {
             int colWidth = tlpGameGrid.Width / Game.Columns;
@@ -298,6 +329,9 @@ namespace VP_ConnectFour
             rbMulti.Checked = false;
             singlePlayerMode = true;
             gbDifficulty.Visible = true;
+            p1Score = 0;
+            p2Score = 0;
+            UpdateScoreLabels();
             Reset();
         }
 
@@ -307,7 +341,18 @@ namespace VP_ConnectFour
             rbSingle.Checked = false;
             singlePlayerMode = false;
             gbDifficulty.Visible = false;
+            p1Score = 0;
+            p2Score = 0;
+            UpdateScoreLabels();
             Reset();
+        }
+
+
+        private void btResetScores_Click(object sender, EventArgs e)
+        {
+            p1Score = 0;
+            p2Score = 0;
+            UpdateScoreLabels();
         }
     }
 }
