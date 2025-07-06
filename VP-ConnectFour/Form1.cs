@@ -13,7 +13,8 @@ namespace VP_ConnectFour
 {
     public partial class Form1 : Form
     {
-        Game game = new Game();
+        static Game game = new Game();
+        AIPlayer AI = new AIPlayer(game);
         Panel[,] cells = new Panel[Game.Rows, Game.Columns];
         bool singlePlayerMode = false;
         Random rng = new Random();
@@ -66,10 +67,16 @@ namespace VP_ConnectFour
             {
                 return;
             }
-            inputEnabled = false;
             int row = game.GetLowermostFreeRow(col);
-            if (row == -1) return;
 
+            if (row == -1)
+            {
+                return;
+            }
+
+            inputEnabled = false;
+            
+            
             game.DropDisc(row, col, game.CurrentPlayer);
             Color discColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
             await AnimateDiscFall(row, col, discColor);
@@ -91,7 +98,7 @@ namespace VP_ConnectFour
 
             if (game.IsBoardFull())
             {
-                lbTurn.Text = "It's a tie!\nReset the board to play again";
+                setBoredFullText();
                 inputEnabled = false;
                 return;
             }
@@ -112,138 +119,38 @@ namespace VP_ConnectFour
 
         private async void AIMove()
         {
-            int aiCol = -1;
-
-            if (difficulty == "Beginner")
+            int aiCol = AI.GetMove(difficulty);
+            if (aiCol == -1)
             {
-                aiCol = BeginnerMove();
+                return;
             }
-            else if (difficulty == "Intermediate")
+            int aiRow = game.GetLowermostFreeRow(aiCol);
+            game.DropDisc(aiRow, aiCol, game.CurrentPlayer);
+            Color discColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
+            await AnimateDiscFall(aiRow, aiCol, discColor);
+            if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
             {
-                aiCol = IntermediateMove();
-            }
-            else if (difficulty == "Advanced")
-            {
-                aiCol = AdvancedMove();
+                p2Score++;
+                UpdateScoreLabels();
+                lbTurn.Text = "AI wins! Better luck next time.\nReset the board to play again!";
+                inputEnabled = false;
+                return;
             }
 
-            if (aiCol != -1)
+            if (game.IsBoardFull())
             {
-                int aiRow = game.GetLowermostFreeRow(aiCol);
-                game.DropDisc(aiRow, aiCol, game.CurrentPlayer);
-                Color discColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
-                await AnimateDiscFall(aiRow, aiCol, discColor);
-                if (game.CheckWin(aiRow, aiCol, game.CurrentPlayer))
-                {
-                    p2Score++;
-                    UpdateScoreLabels();
-                    lbTurn.Text ="AI wins! Better luck next time.\nReset the board to play again!";
-                    inputEnabled = false;
-                    return;
-                }
-
-                if (game.IsBoardFull())
-                {
-                    lbTurn.Text = "It's a tie!\nReset the board to play again";
-                    inputEnabled = false;
-                    return;
-                }
-
-                game.SwitchPlayer();
-                switchTurnText();
-                inputEnabled = true;
+                setBoredFullText();
+                inputEnabled = false;
+                return;
             }
+
+            game.SwitchPlayer();
+            switchTurnText();
+            inputEnabled = true;
+            
         }
 
-        private int BeginnerMove()
-        {
-            List<int> validCols = new List<int>();
-            for (int col = 0; col < Game.Columns; col++)
-            {
-                if (game.GetLowermostFreeRow(col) != -1)
-                    validCols.Add(col);
-            }
-            return validCols.Count > 0 ? validCols[rng.Next(validCols.Count)] : -1;
-        }
-
-        private int IntermediateMove()
-        {
-
-            for (int col = 0; col < Game.Columns; col++)
-            {
-                int testRow = game.GetLowermostFreeRow(col);
-                if (testRow != -1 && game.CheckWin(testRow, col, 2))
-                    return col;
-            }
-
-            for (int col = 0; col < Game.Columns; col++)
-            {
-                int testRow = game.GetLowermostFreeRow(col);
-                if (testRow != -1 && game.CheckWin(testRow, col, 1))
-                    return col;
-            }
-
-            return BeginnerMove();
-        }
-
-        private int AdvancedMove()
-        {
-            int bestScore = int.MinValue;
-            int bestCol = -1;
-
-            for (int col = 0; col < Game.Columns; col++)
-            {
-                int row = game.GetLowermostFreeRow(col);
-                if (row != -1) 
-                {
-                    if (game.CheckWin(row, col, 2))
-                    {
-                        return col;  
-                    }
-                    game.DropDisc(row, col, 2);
-                    bool allowsImmediateHumanWin = false;
-                    for (int humanCheckCol = 0; humanCheckCol < Game.Columns; humanCheckCol++)
-                    {
-                        int humanCheckRow = game.GetLowermostFreeRow(humanCheckCol);
-                        if (humanCheckRow != -1)
-                        {
-                            if (game.CheckWin(humanCheckRow, humanCheckCol, 1))
-                            {
-                                allowsImmediateHumanWin = true;
-                            }
-                            if (allowsImmediateHumanWin) break;  
-                        }
-                    }
-                    int currentMoveScore = game.EvaluateBoard();
-
-                    game.RemoveDisc(row, col);
-                    
-                    if (allowsImmediateHumanWin)
-                    {
-                        currentMoveScore = int.MinValue;
-                    }
-
-                    if (currentMoveScore > bestScore)
-                    {
-                        bestScore = currentMoveScore;
-                        bestCol = col;
-                    }
-                   
-                }
-            }
-
-            if (bestCol == -1 || bestScore == int.MinValue)
-            {
-                return BeginnerMove();
-            }
-
-            return bestCol;
-        }
-
-
-
-
-
+       
         private void Reset()
         {
             for (int row = 0; row < Game.Rows; row++)
@@ -272,6 +179,11 @@ namespace VP_ConnectFour
                 lbTurn.Text = $"Player {game.CurrentPlayer}'s Turn";
             }
             lbTurn.ForeColor = game.CurrentPlayer == 1 ? Color.Red : Color.Yellow;
+        }
+        private void setBoredFullText() 
+        {
+            lbTurn.Text = "It's a tie!\nReset the board to play again";
+            lbTurn.ForeColor = Color.White;
         }
         private void UpdateScoreLabels() 
         {
@@ -310,17 +222,29 @@ namespace VP_ConnectFour
         private void rbBeginner_Click(object sender, EventArgs e)
         {
             difficulty = "Beginner";
+            ResetScores();
+            Reset();
         }
 
         private void rbIntermediate_Click(object sender, EventArgs e)
         {
             difficulty = "Intermediate";
-
+            ResetScores();
+            Reset();
         }
 
         private void rbAdvanced_Click(object sender, EventArgs e)
         {
             difficulty = "Advanced";
+            ResetScores();
+            Reset();
+        }
+        private void rbExtreme_Click(object sender, EventArgs e)
+        {
+            difficulty = "Extreme";
+            ResetScores();
+
+            Reset();
         }
 
         private void rbSingle_Click(object sender, EventArgs e)
@@ -329,9 +253,7 @@ namespace VP_ConnectFour
             rbMulti.Checked = false;
             singlePlayerMode = true;
             gbDifficulty.Visible = true;
-            p1Score = 0;
-            p2Score = 0;
-            UpdateScoreLabels();
+            ResetScores();
             Reset();
         }
 
@@ -341,18 +263,22 @@ namespace VP_ConnectFour
             rbSingle.Checked = false;
             singlePlayerMode = false;
             gbDifficulty.Visible = false;
-            p1Score = 0;
-            p2Score = 0;
-            UpdateScoreLabels();
+            ResetScores();
             Reset();
         }
 
 
         private void btResetScores_Click(object sender, EventArgs e)
         {
+            ResetScores();
+        }
+        private void ResetScores() 
+        {
             p1Score = 0;
             p2Score = 0;
             UpdateScoreLabels();
         }
+
+       
     }
 }
