@@ -17,7 +17,6 @@ namespace VP_ConnectFour
         AIPlayer AI = new AIPlayer(game);
         Panel[,] cells = new Panel[Game.Rows, Game.Columns];
         bool singlePlayerMode = false;
-        Random rng = new Random();
         string difficulty = "Beginner";
         bool inputEnabled = true;
         int p1Score = 0;
