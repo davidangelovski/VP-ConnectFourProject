@@ -78,9 +78,13 @@
             this.rbIntermediate = new System.Windows.Forms.RadioButton();
             this.rbAdvanced = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbP2Score = new System.Windows.Forms.Label();
+            this.lbP1Score = new System.Windows.Forms.Label();
+            this.lbScore = new System.Windows.Forms.Label();
             this.lbTurn = new System.Windows.Forms.Label();
             this.gbMode = new System.Windows.Forms.GroupBox();
             this.gbDifficulty = new System.Windows.Forms.GroupBox();
+            this.btResetScores = new System.Windows.Forms.Button();
             this.tlpGameGrid.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gbMode.SuspendLayout();
@@ -565,13 +569,52 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.Black;
+            this.groupBox1.Controls.Add(this.lbP2Score);
+            this.groupBox1.Controls.Add(this.lbP1Score);
+            this.groupBox1.Controls.Add(this.lbScore);
             this.groupBox1.Controls.Add(this.lbTurn);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox1.Location = new System.Drawing.Point(2, 102);
+            this.groupBox1.Location = new System.Drawing.Point(2, 34);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(185, 79);
+            this.groupBox1.Size = new System.Drawing.Size(185, 147);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
+            // 
+            // lbP2Score
+            // 
+            this.lbP2Score.AutoSize = true;
+            this.lbP2Score.BackColor = System.Drawing.Color.Transparent;
+            this.lbP2Score.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbP2Score.ForeColor = System.Drawing.Color.Yellow;
+            this.lbP2Score.Location = new System.Drawing.Point(21, 123);
+            this.lbP2Score.Name = "lbP2Score";
+            this.lbP2Score.Size = new System.Drawing.Size(68, 13);
+            this.lbP2Score.TabIndex = 17;
+            this.lbP2Score.Text = "Player 2: 0";
+            // 
+            // lbP1Score
+            // 
+            this.lbP1Score.AutoSize = true;
+            this.lbP1Score.BackColor = System.Drawing.Color.Transparent;
+            this.lbP1Score.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbP1Score.ForeColor = System.Drawing.Color.Red;
+            this.lbP1Score.Location = new System.Drawing.Point(21, 102);
+            this.lbP1Score.Name = "lbP1Score";
+            this.lbP1Score.Size = new System.Drawing.Size(68, 13);
+            this.lbP1Score.TabIndex = 16;
+            this.lbP1Score.Text = "Player 1: 0";
+            // 
+            // lbScore
+            // 
+            this.lbScore.AutoSize = true;
+            this.lbScore.BackColor = System.Drawing.Color.Transparent;
+            this.lbScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbScore.ForeColor = System.Drawing.Color.White;
+            this.lbScore.Location = new System.Drawing.Point(10, 77);
+            this.lbScore.Name = "lbScore";
+            this.lbScore.Size = new System.Drawing.Size(44, 13);
+            this.lbScore.TabIndex = 15;
+            this.lbScore.Text = "Score:";
             // 
             // lbTurn
             // 
@@ -609,17 +652,30 @@
             this.gbDifficulty.Text = "Select AI Difficulty:";
             this.gbDifficulty.Visible = false;
             // 
+            // btResetScores
+            // 
+            this.btResetScores.Location = new System.Drawing.Point(2, 183);
+            this.btResetScores.Name = "btResetScores";
+            this.btResetScores.Size = new System.Drawing.Size(121, 25);
+            this.btResetScores.TabIndex = 15;
+            this.btResetScores.Text = "Reset Scores";
+            this.btResetScores.UseVisualStyleBackColor = true;
+            this.btResetScores.Click += new System.EventHandler(this.btResetScores_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btResetScores);
             this.Controls.Add(this.gbDifficulty);
             this.Controls.Add(this.gbMode);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.tlpGameGrid);
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -689,6 +745,10 @@
         private System.Windows.Forms.Label lbTurn;
         private System.Windows.Forms.GroupBox gbMode;
         private System.Windows.Forms.GroupBox gbDifficulty;
+        private System.Windows.Forms.Label lbScore;
+        private System.Windows.Forms.Label lbP1Score;
+        private System.Windows.Forms.Label lbP2Score;
+        private System.Windows.Forms.Button btResetScores;
     }
 }
 
